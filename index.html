@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOP H4X SENSI</title>
+
+<style>
+body{
+margin:0;
+padding:20px;
+background:#050505;
+color:white;
+font-family:Arial,sans-serif
+}
+
+.app{
+max-width:600px;
+margin:auto
+}
+
+h1{
+text-align:center;
+font-size:32px;
+margin:20px 0 5px
+}
+
+h1 span{
+color:red
+}
+
+.sub{
+text-align:center;
+color:#888;
+margin-bottom:25px
+}
+
+.card{
+background:#111;
+padding:20px;
+border-radius:18px;
+border:1px solid #292929;
+margin-bottom:18px
+}
+
+label{
+display:block;
+margin:15px 0 7px;
+font-weight:bold
+}
+
+input,select{
+width:100%;
+height:50px;
+background:#070707;
+color:white;
+border:1px solid #444;
+border-radius:10px;
+padding:0 12px;
+font-size:16px;
+box-sizing:border-box
+}
+
+button{
+width:100%;
+height:52px;
+margin-top:18px;
+border:0;
+border-radius:10px;
+background:#e00000;
+color:white;
+font-size:16px;
+font-weight:bold
+}
+
+#result{
+display:none
+}
+
+.device{
+font-size:21px;
+font-weight:bold;
+margin-bottom:18px
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px
+}
+
+.box{
+background:#080808;
+border:1px solid #292929;
+border-radius:12px;
+padding:15px
+}
+
+.box small{
+display:block;
+color:#888;
+margin-bottom:7px
+}
+
+.box b{
+font-size:24px
+}
+
+.copy{
+background:#202020;
+border:1px solid #444
+}
+
+.note{
+color:#777;
+font-size:11px;
+text-align:center;
+margin-top:15px;
+line-height:1.5
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<h1>TOP <span>H4X</span> SENSI</h1>
+
+<div class="sub">
+Free Fire Sensitivity Generator
+</div>
+
+<div class="card">
+
+<label>PHONE MODEL</label>
+
+<input
+id="phone"
+type="text"
+placeholder="Enter phone name"
+>
+
+<label>GAME</label>
+
+<select id="game">
+<option>Free Fire</option>
+<option>Free Fire MAX</option>
+</select>
+
+<label>AIM STYLE</label>
+
+<select id="aim">
+<option>One-Tap Headshot</option>
+<option>Drag Headshot</option>
+</select>
+
+<button id="generate">
+GENERATE SENSITIVITY
+</button>
+
+</div>
+
+
+<div class="card" id="result">
+
+<div class="device" id="device"></div>
+
+<div class="grid">
+
+<div class="box">
+<small>GENERAL</small>
+<b id="general"></b>
+</div>
+
+<div class="box">
+<small>RED DOT</small>
+<b id="red"></b>
+</div>
+
+<div class="box">
+<small>2× SCOPE</small>
+<b id="scope2"></b>
+</div>
+
+<div class="box">
+<small>4× SCOPE</small>
+<b id="scope4"></b>
+</div>
+
+<div class="box">
+<small>SNIPER</small>
+<b id="sniper"></b>
+</div>
+
+<div class="box">
+<small>FREE LOOK</small>
+<b id="free"></b>
+</div>
+
+<div class="box">
+<small>DPI</small>
+<b id="dpi"></b>
+</div>
+
+<div class="box">
+<small>FIRE BUTTON</small>
+<b id="fire"></b>
+</div>
+
+</div>
+
+<button class="copy" id="copy">
+COPY SETTINGS
+</button>
+
+<div class="note">
+These are calculated recommendations. Actual performance can vary
+between devices, game versions and players.
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+document.getElementById("generate").addEventListener("click",function(){
+
+var phone =
+document.getElementById("phone").value.trim();
+
+if(phone.length === 0){
+
+alert("Please enter your phone model.");
+
+return;
+
+}
+
+
+/*
+Make a number from the device name.
+This means different phone names can
+produce different recommendations.
+*/
+
+var number = 0;
+
+for(var i=0;i<phone.length;i++){
+
+number =
+(number * 31 + phone.charCodeAt(i)) % 100000;
+
+}
+
+
+var aim =
+document.getElementById("aim").value;
+
+var game =
+document.getElementById("game").value;
+
+
+/* Base settings */
+
+var general =
+165 + (number % 31);
+
+var red =
+general - 5;
+
+var scope2 =
+general - 15;
+
+var scope4 =
+general - 25;
+
+var sniper =
+90 + (number % 21);
+
+var free =
+25;
+
+var dpi =
+380 + (number % 121);
+
+var fire =
+44 + (number % 10);
+
+
+/* Aim adjustment */
+
+if(aim === "One-Tap Headshot"){
+
+general += 3;
+red += 3;
+
+}
+
+if(aim === "Drag Headshot"){
+
+general += 6;
+red += 5;
+
+}
+
+
+/* MAX adjustment */
+
+if(game === "Free Fire MAX"){
+
+scope4 -= 2;
+
+}
+
+
+/* Maximum sensitivity = 200 */
+
+general = Math.min(general,200);
+red = Math.min(red,200);
+scope2 = Math.min(scope2,200);
+scope4 = Math.min(scope4,200);
+sniper = Math.min(sniper,200);
+
+
+/* Show result */
+
+document.getElementById("device").innerHTML =
+"📱 " + phone;
+
+document.getElementById("general").innerHTML =
+general;
+
+document.getElementById("red").innerHTML =
+red;
+
+document.getElementById("scope2").innerHTML =
+scope2;
+
+document.getElementById("scope4").innerHTML =
+scope4;
+
+document.getElementById("sniper").innerHTML =
+sniper;
+
+document.getElementById("free").innerHTML =
+free;
+
+document.getElementById("dpi").innerHTML =
+dpi;
+
+document.getElementById("fire").innerHTML =
+fire + "%";
+
+
+document.getElementById("result").style.display =
+"block";
+
+});
+
+
+document.getElementById("copy").addEventListener("click",function(){
+
+var text =
+"🔥 TOP H4X SENSI 🔥\n\n"+
+document.getElementById("device").innerText+"\n\n"+
+"General: "+document.getElementById("general").innerText+"\n"+
+"Red Dot: "+document.getElementById("red").innerText+"\n"+
+"2× Scope: "+document.getElementById("scope2").innerText+"\n"+
+"4× Scope: "+document.getElementById("scope4").innerText+"\n"+
+"Sniper: "+document.getElementById("sniper").innerText+"\n"+
+"Free Look: "+document.getElementById("free").innerText+"\n"+
+"DPI: "+document.getElementById("dpi").innerText+"\n"+
+"Fire Button: "+document.getElementById("fire").innerText;
+
+if(navigator.clipboard){
+
+navigator.clipboard.writeText(text);
+
+alert("Settings copied!");
+
+}else{
+
+alert(text);
+
+}
+
+});
+
+</script>
+
+</body>
+</html>
